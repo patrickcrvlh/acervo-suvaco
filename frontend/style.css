@@ -1,0 +1,74 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+h1 {
+  font-size: 22px;
+}
+
+h2 {
+  font-size: 18px;
+}
+
+table {
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+td, th {
+  border: 1px solid #000000;
+  padding: 5px;
+  text-align: left;
+}
+
+input[type=text] {
+  width: 300px;
+}
+
+textarea {
+  width: 300px;
+  height: 60px;
+}
+
+img {
+  border: 1px solid #000000;
+  max-width: 400px;
+}
+
+.aviso {
+  border: 1px solid #000000;
+  padding: 8px;
+  max-width: 600px;
+}
+
+/* marca os campos que o sistema preencheu copiando da imagem parecida */
+.sugerido {
+  font-size: 12px;
+}
+
+/* deixa as palavras-chave alinhadas em colunas.
+   o "white-space: nowrap" evita que, por exemplo, os termos "estandarte/bandeira" e
+   "serpentina de ouro" quebrem em duas linhas e desalinhem a grade */
+label {
+  display: inline-block;
+  width: 175px;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+/* a caixa das palavras-chave: largura escolhida para caber 4 por linha */
+#palavrasChave {
+  max-width: 740px;
+}
+
+/* caixa que mostra o que seria gravado ao salvar */
+pre {
+  border: 1px solid #000000;
+  padding: 8px;
+  max-width: 600px;
+  overflow-x: auto;
+  font-size: 12px;
+}

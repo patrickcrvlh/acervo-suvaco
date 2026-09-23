@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+<meta charset="utf-8">
+<title>Metadados da midia</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>Acervo Suvaco do Cristo</h1>
+
+<hr>
+
+<h2>2. Metadados da midia</h2>
+
+<p>Confira a imagem e preencha os campos. Os campos que dao para descobrir
+sozinhos (formato, tamanho, largura e altura) ja vem preenchidos.</p>
+
+<h2>Imagem enviada</h2>
+
+<p>
+  <img id="foto" src="" alt="imagem enviada">
+</p>
+
+<p>Arquivo: <b><span id="nomeArquivo">-</span></b></p>
+
+<h2>Verificacao de duplicata</h2>
+
+<div class="aviso" id="caixaDuplicata">
+  <p>Ja existe no acervo: <b>-</b></p>
+  <p>Maior similaridade: <b>-</b></p>
+  <p>Esses valores vem do backend (funcao verificar_midia do duplicatas.py),
+  que ainda nao esta ligado nesta pagina.</p>
+</div>
+
+<h2>Campos do banco de dados</h2>
+
+<!-- Os campos abaixo sao as colunas reais da aba "Catalogacao" da planilha
+     do acervo. Antes esta tabela tinha campos de exemplo (Evento, Local)
+     que nao existem na planilha. -->
+
+<form id="formulario">
+
+<table>
+  <tr>
+    <td>Item (nome do arquivo)</td>
+    <td><input type="text" id="arquivo"></td>
+  </tr>
+  <tr>
+    <td>Tipo do arquivo</td>
+    <td>
+      <select id="tipo_arquivo">
+        <option value="imagem">imagem</option>
+        <option value="documento">documento</option>
+        <option value="video">video</option>
+        <option value="audio">audio</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Formato do arquivo</td>
+    <td><input type="text" id="formato"></td>
+  </tr>
+  <tr>
+    <td>Tamanho (Kb)</td>
+    <td><input type="text" id="tamanho_kb"></td>
+  </tr>
+  <tr>
+    <td>Ano do desfile</td>
+    <td><input type="text" id="ano_desfile"></td>
+  </tr>
+  <tr>
+    <td>Fonte</td>
+    <td><input type="text" id="fonte"></td>
+  </tr>
+  <tr>
+    <td>Descricao (informal)</td>
+    <td><textarea id="descricao"></textarea></td>
+  </tr>
+  <tr>
+    <td>Largura (px)</td>
+    <td><input type="text" id="largura_px"></td>
+  </tr>
+  <tr>
+    <td>Altura (px)</td>
+    <td><input type="text" id="altura_px"></td>
+  </tr>
+  <tr>
+    <td>Resolucao (DPI)</td>
+    <td><input type="text" id="resolucao_dpi"></td>
+  </tr>
+  <tr>
+    <td>Autor</td>
+    <td><input type="text" id="autor"></td>
+  </tr>
+  <tr>
+    <td>Duracao (segundos)</td>
+    <td><input type="text" id="duracao_seg"></td>
+  </tr>
+</table>
+
+<h2>Palavras-chave</h2>
+
+<p>Uma midia pode ter varias. Sao as 22 categorias da aba de palavras-chave
+da planilha - as mesmas que o modelo de rotulacao automatica vai ter que
+aprender mais pra frente.</p>
+
+<div id="palavrasChave" class="aviso"></div>
+
+<h2>Campos de controle da extensao</h2>
+
+<p>Estes nao vao para o banco de dados, ficam so no controle do acervo.</p>
+
+<table>
+  <tr>
+    <td>Responsavel na Extensao</td>
+    <td><input type="text" id="responsavel"></td>
+  </tr>
+  <tr>
+    <td>Repositorio (0 = excluir item)</td>
+    <td><input type="text" id="repositorio"></td>
+  </tr>
+  <tr>
+    <td>Comentarios / Duvidas</td>
+    <td><textarea id="comentarios"></textarea></td>
+  </tr>
+</table>
+
+<p>
+  <button type="button" onclick="salvar()">Salvar</button>
+  <a href="index.html">Enviar outra</a>
+  <a href="banco.html">Ver base de dados</a>
+</p>
+
+<p id="status"></p>
+
+</form>
+
+<script>
+// ---------------------------------------------------------------
+// As 22 palavras-chave da planilha, só que na mesma ordem das colunas da aba.
+// Quando o backend estiver ligado, essa lista vai vir no caso de planilha.py
+// tem ela na constante PALAVRAS_CHAVE), e nao precisa ficar repetida aqui.
+// ---------------------------------------------------------------
+
+var PALAVRAS_CHAVE = [
+  "adereços", "baianas", "bateria", "camiseta", "concentração",
+  "desfile", "ensaio", "estandarte/bandeira", "fantasia", "foliões",
+  "imprensa", "letra", "mestre-sala", "multidão", "porta-bandeira",
+  "premiação", "produção", "samba", "serpentina de ouro", "show/festa",
+  "suvaquinho", "outros"
+];
+
+var caixaPalavras = document.getElementById("palavrasChave");
+var html = "";
+PALAVRAS_CHAVE.forEach(function (palavra) {
+  html += "<label><input type='checkbox' class='pc' value='" + palavra + "'> " +
+          palavra + "</label>";
+});
+// As colunas sao feitas no CSS (cada label tem largura fixa e a caixa tem
+// largura definida), entao nao precisa por <br> na mao aqui.
+caixaPalavras.innerHTML = html;
+
+// ---------------------------------------------------------------
+// Mostra a imagem escolhida na tela 1 e preenche o que ja da para saber
+// ---------------------------------------------------------------
+
+var imagem = sessionStorage.getItem("imagem");
+var dados = JSON.parse(sessionStorage.getItem("dados") || "{}");
+
+if (imagem) {
+  document.getElementById("foto").src = imagem;
+} else {
+  document.getElementById("foto").alt = "(previa nao disponivel)";
+}
+
+// Lista dos campos: o id do input no HTML e igual ao nome do campo, que por
+// sua vez e igual ao nome da coluna no acervo.csv. Manter os tres iguais
+// deixa o preenchimento ser um laco em vez de uma linha por campo, e vai
+// facilitar na hora de ligar no backend.
+var CAMPOS = ["arquivo", "tipo_arquivo", "formato", "tamanho_kb", "ano_desfile",
+              "fonte", "descricao", "largura_px", "altura_px", "resolucao_dpi",
+              "autor", "duracao_seg", "responsavel", "repositorio", "comentarios"];
+
+CAMPOS.forEach(function (campo) {
+  var elemento = document.getElementById(campo);
+  if (elemento && dados[campo] !== undefined) {
+    elemento.value = dados[campo];
+  }
+});
+
+document.getElementById("nomeArquivo").innerHTML = dados.arquivo || "-";
+
+// ---------------------------------------------------------------
+// Salvar
+// ---------------------------------------------------------------
+
+function salvar() {
+  var registro = {};
+
+  CAMPOS.forEach(function (campo) {
+    var elemento = document.getElementById(campo);
+    if (elemento) { registro[campo] = elemento.value; }
+  });
+
+  // junta as palavras-chave marcadas numa string so, no mesmo formato em
+  // que elas saem da planilha: "foliões, fantasia, desfile"
+  var marcadas = [];
+  document.querySelectorAll(".pc:checked").forEach(function (caixinha) {
+    marcadas.push(caixinha.value);
+  });
+  registro.palavras_chave = marcadas.join(", ");
+
+  // QUANDO O BACKEND ESTIVER LIGADO: aqui vai um fetch mandando este
+  // objeto para o Python, que grava no banco. Por enquanto so mostra na
+  // tela o que seria gravado, para dar para conferir o formato.
+  document.getElementById("status").innerHTML =
+    "Ainda nao salva - falta ligar no backend. O que seria gravado:<br><pre>" +
+    JSON.stringify(registro, null, 2) + "</pre>";
+}
+</script>
+
+</body>
+
+</html>

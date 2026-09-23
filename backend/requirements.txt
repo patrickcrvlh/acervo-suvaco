@@ -1,0 +1,10 @@
+# Bibliotecas que os 4 scripts do backend usam.
+# Instale com:  pip install -r requirements.txt
+
+torch           # a rede neural (usada pelo 02)
+transformers    # baixa e roda o modelo de visão (usada pelo 02)
+datasets        # monta o conjunto de imagens (usada pelo 01 e 02)
+pillow          # abre e confere as imagens (usada pelo 01, 02 e 04)
+tqdm            # barra de progresso (usada pelo 02)
+pandas          # lê e ordena o CSV de resultados (usada pelo 03 e 04)
+matplotlib      # monta as figuras de conferência (usada pelo 04)

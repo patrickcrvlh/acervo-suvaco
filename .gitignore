@@ -1,0 +1,46 @@
+# ============================================================
+# O que o Git deve IGNORAR (nunca sobe para o GitHub)
+# ============================================================
+# Cada linha é um padrão. Uma pasta termina com "/".
+# Se um dia precisar subir algo que está aqui, fale com o grupo antes.
+
+# ---- senhas e configuração de cada máquina ----
+# O .env guarda a senha do banco. Cada um tem o seu, e ele NUNCA sobe.
+# O .env.example (sem senha) sobe, para servir de modelo.
+.env
+*.env
+!.env.example
+
+# ---- dados do acervo ----
+# Fotos e planilhas do acervo não sobem: têm pessoas identificáveis,
+# nomes de quem catalogou e links do Drive. Além disso são pesados.
+imagens/
+acervo/
+fotos/
+*.xlsx
+*.xls
+*.csv
+
+# ---- arquivos que os scripts geram ----
+# Cada um gera o seu rodando os scripts; não faz sentido versionar.
+suvaco_dataset/
+resultados.csv
+resultados_ordenados.csv
+figuras/
+*.index
+metadata.json
+
+# ---- Python ----
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# ---- lixo de sistema e de editor ----
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

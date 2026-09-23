@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+<meta charset="utf-8">
+<title>Base de dados</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>Acervo Suvaco do Cristo</h1>
+
+<hr>
+
+<h2>3. Base de dados</h2>
+
+<p>Lista das midias catalogadas. As colunas sao as da planilha do acervo,
+e as linhas abaixo sao os 12 primeiros itens de verdade da planilha (antes
+eram 3 linhas inventadas).</p>
+
+<p>O acervo inteiro tem <b>1431 midias</b>. Quando o backend estiver ligado,
+esta tabela vai ser montada a partir do acervo.csv, com busca e paginacao -
+mandar 1431 linhas de uma vez para o navegador nao faz sentido.</p>
+
+<p>
+  Buscar na tabela: <input type="text" id="busca" onkeyup="filtrar()">
+</p>
+
+<table id="tabela">
+
+  <tr>
+    <th>Id</th>
+    <th>Arquivo</th>
+    <th>Tipo</th>
+    <th>Ano</th>
+    <th>Palavras-chave</th>
+    <th>Descricao</th>
+    <th>Autor</th>
+  </tr>
+
+  <tr>
+    <td>1</td>
+    <td>Samba 1986.jpg</td>
+    <td>imagem</td>
+    <td>1986</td>
+    <td>letra, samba</td>
+    <td>Letra do samba de 1986 - Divinas Axilas</td>
+    <td>João Aveleira, Arnaldo Chaim, José Lavigne, Roberto Pirulito</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>1986 camiseta Sonia Matos.jpg</td>
+    <td>imagem</td>
+    <td>1986</td>
+    <td>camiseta</td>
+    <td>Arte da camiseta de 1986</td>
+    <td>Sonia Matos</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>1986 desfile.JPG</td>
+    <td>imagem</td>
+    <td>1986</td>
+    <td>fantasia, foliões</td>
+    <td>Pessoas fantasiadas no ano de 1986 pelo bloco</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>1986 Foto Maria Angelica 741.jpg</td>
+    <td>imagem</td>
+    <td>1986</td>
+    <td>desfile, fantasia, foliões</td>
+    <td>Jovens e crianças fantasiadas na porta de uma casa</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>1986 Saída Rua Maria Angelica.jpg</td>
+    <td>imagem</td>
+    <td>1986</td>
+    <td>desfile, fantasia, foliões</td>
+    <td>Pessoas fantasiadas no ano de 1986 pelo bloco</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>1986 saida.JPG</td>
+    <td>imagem</td>
+    <td>1986</td>
+    <td>desfile, fantasia, foliões</td>
+    <td>Pessoas fantasiadas no ano de 1986 pelo bloco</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>Suvaco1986 manjelica.jpg</td>
+    <td>imagem</td>
+    <td>1986</td>
+    <td>desfile, fantasia, foliões</td>
+    <td>Jovens e crianças fantasiadas na porta de uma casa</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>Turma da maria Angelica 1986.jpg</td>
+    <td>imagem</td>
+    <td>1986</td>
+    <td>desfile, fantasia, foliões</td>
+    <td>Jovens e crianças fantasiadas na porta de uma casa</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td>Turma da maria Angelica 1986 (1).jpg</td>
+    <td>imagem</td>
+    <td>1986</td>
+    <td>desfile, fantasia, foliões</td>
+    <td>Jovens e crianças fantasiadas na porta de uma casa</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>13</td>
+    <td>1985 JB - destaque 1 - nasce o Suvaco.jpg</td>
+    <td>imagem</td>
+    <td>1986</td>
+    <td>imprensa</td>
+    <td>Parte de uma reportagem sobre o nascimento do suvaco</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>14</td>
+    <td>1985 JB - destaque2 - nasce o Suvaco.jpg</td>
+    <td>imagem</td>
+    <td>1986</td>
+    <td>imprensa</td>
+    <td>Parte de uma reportagem sobre o nascimento do suvaco</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>15</td>
+    <td>1985 JB - Fundado Suvaco no Posto Nove JB Joaquim.jpg</td>
+    <td>imagem</td>
+    <td>1986</td>
+    <td>imprensa</td>
+    <td>Reportagem capa jornal do brasil sobre nascimento do suvaco no posto 9</td>
+    <td></td>
+  </tr>
+
+</table>
+
+<p id="status"></p>
+
+<p>
+  <a href="index.html">Voltar</a>
+</p>
+
+<script>
+// Filtro simples: esconde as linhas que nao tem o texto digitado.
+// Fiz pensando só nas linhas que estao na pagina; a ideia é que a busca
+// de verdade, no acervo inteiro, seja feita no Python quando o backend
+// estiver ligado.
+
+function filtrar() {
+  var procurado = document.getElementById("busca").value.toLowerCase();
+  var tabela = document.getElementById("tabela");
+  var visiveis = 0;
+
+  // comeca em 1 para nao mexer no cabecalho
+  for (var i = 1; i < tabela.rows.length; i++) {
+    var linha = tabela.rows[i];
+    var texto = linha.textContent.toLowerCase();
+
+    if (texto.indexOf(procurado) >= 0) {
+      linha.style.display = "";
+      visiveis++;
+    } else {
+      linha.style.display = "none";
+    }
+  }
+
+  document.getElementById("status").innerHTML =
+    "Mostrando " + visiveis + " de " + (tabela.rows.length - 1) + " linhas.";
+}
+</script>
+
+</body>
+
+</html>

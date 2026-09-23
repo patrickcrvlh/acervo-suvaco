@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+<meta charset="utf-8">
+<title>Acervo Suvaco do Cristo</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>Acervo Suvaco do Cristo</h1>
+
+<p>Sistema de catalogacao de midias do bloco. Projeto de extensao - UFRJ.</p>
+
+<hr>
+
+<h2>1. Enviar uma nova midia</h2>
+
+<p>Escolha uma imagem do computador e clique em enviar.</p>
+
+<p>
+  <input type="file" id="arquivo" accept=".jpg,.jpeg,.png,.bmp">
+</p>
+
+<p>
+  <button onclick="enviar()">Enviar</button>
+</p>
+
+<p id="status"></p>
+
+<hr>
+
+<p>
+  <a href="banco.html">Ver base de dados</a>
+</p>
+
+<script>
+// Leva a imagem escolhida até a proxima pagina.
+// Aí além da imagem, ja passamos o que da para descobrir sem o backend:
+// nome, formato, tamanho em Kb e as dimensoes em pixels, por exemplo.
+// Seriam 4 campos da planilha que a extensao preenche a mao hoje.
+// --------------------------
+// QUANDO O BACKEND ESTIVER LIGADO:
+// Ai sim ao inves de ler o arquivo aqui, esta funcao vai mandar ele para o Python
+// (a funcao "verificar_midia" do "duplicatas.py") com um fetch, e a resposta
+// ja vem com a checagem de duplicata e os campos sugeridos.
+
+function enviar() {
+  var arquivo = document.getElementById("arquivo").files[0];
+  var aviso = document.getElementById("status");
+
+  if (!arquivo) {
+    aviso.innerHTML = "Escolha uma imagem primeiro.";
+    return;
+  }
+
+  var leitor = new FileReader();
+
+  leitor.onload = function () {
+    // Imagem grande nao cabe no sessionStorage (o limite e uns 5 MB), por
+    // isso o try/catch: se nao couber, a tela 2 abre sem a previa.
+    try {
+      sessionStorage.setItem("imagem", leitor.result);
+    } catch (e) {
+      sessionStorage.removeItem("imagem");
+    }
+
+    // Descobre largura e altura carregando a imagem na memoria
+    var img = new Image();
+    img.onload = function () {
+      var dados = {
+        arquivo: arquivo.name,
+        tipo_arquivo: "imagem",
+        formato: arquivo.name.split(".").pop().toLowerCase(),
+        tamanho_kb: Math.round(arquivo.size / 1024),
+        largura_px: img.width,
+        altura_px: img.height
+      };
+      sessionStorage.setItem("dados", JSON.stringify(dados));
+      window.location = "metadados.html";
+    };
+    img.src = leitor.result;
+  };
+
+  leitor.readAsDataURL(arquivo);
+}
+</script>
+
+</body>
+
+</html>
