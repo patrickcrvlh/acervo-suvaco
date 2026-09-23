@@ -25,8 +25,9 @@ Cada pasta tem o seu próprio `README.md` explicando como rodar aquela parte.
 | Banco | PostgreSQL criado pelo Igor, rodando por enquanto na máquina dele. A estrutura das tabelas ainda vai entrar aqui. |
 
 ## Equipe
-
+```
 Patrick José M. T. de Carvalho, Yuri Altomare de Carvalho e Igor Queiroz.
 Orientação: Paulo Mann.
 Artigo de referência: *Preservando o patrimônio do carnaval brasileiro por meio de IA* (2026).
-Autor: Matheus Sutino
+Autor: Matheus Sutino.
+```
